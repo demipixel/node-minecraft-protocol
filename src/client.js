@@ -175,7 +175,11 @@ Client.prototype.write = function(packetId, params) {
     debug("writing packetId " + that.state + "." + packetName + " (0x" + packetId.toString(16) + ")");
     debug(params);
     var out = that.encryptionEnabled ? new Buffer(that.cipher.update(buffer), 'binary') : buffer;
-    that.socket.write(out);
+    try {
+      that.socket.write(out);
+    } catch (err) {
+      console.log(err);
+    }
     return true;
   }
 
@@ -202,7 +206,11 @@ Client.prototype.writeRaw = function(buffer) {
       if (error)
         throw error; // TODO : How do we handle this error ?
         var out = self.encryptionEnabled ? new Buffer(self.cipher.update(buffer), 'binary') : buffer;
-        self.socket.write(out);
+        try {
+          self.socket.write(out);
+        } catch (err) {
+          console.log(err);
+        }
     };
     if (this.compressionThreshold >= 0 && buffer.length >= this.compressionThreshold) {
         compressPacketBuffer(buffer, finishWriting);
